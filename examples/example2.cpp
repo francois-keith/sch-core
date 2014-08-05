@@ -47,6 +47,10 @@
 
 using namespace sch;
 
+
+bool verifyResult(unsigned i, unsigned j, double distance,
+  const Point3 & p1, const Point3 & p2);
+
 int
 main (int argc, char *argv[])
 {
@@ -119,6 +123,7 @@ main (int argc, char *argv[])
 
   std::cout<< std::endl<<"Number of collisions: "<< collisionNbr << std::endl;
 
+  bool comparison = true;
   for (unsigned i=0; i<sObj.size(); ++i)
   {
     for (unsigned j=0; j<i; ++j)
@@ -134,10 +139,50 @@ main (int argc, char *argv[])
       std::cout <<"Witness points: "  << std::endl;
       std::cout <<"  P1: "<< p1 << std::endl;
       std::cout <<"  P2: "<< p2 << std::endl;
+      if(!verifyResult(i, j, distance, p1, p2))
+      {
+        std::cout << "Warning. The results are not the one expected." <<std::endl;
+        comparison = false;
+      }
       std::cout << std::endl;
     }
   }
+  return (comparison?0:1);
 }
+
+bool verifyResult(unsigned i, unsigned j, double distance,
+  const Point3 & p1, const Point3 & p2)
+{
+  double dd(0);
+  Point3 dp1(0, 0, 0);
+  Point3 dp2(0, 0, 0);
+
+  if(j== 0 && i == 1)
+  {
+    dd = -0.003622207057881;
+    dp1.Set( 0.157367547718, 0.68942718023, 0.891961713557);
+    dp2.Set(0.0986621048016, 0.691217002621, 0.905102283015);
+  }
+  else if(j== 0 && i == 2)
+  {
+    dd = 1.052877530262;
+    dp1.Set(0.113009188603, 0.657740931859, 0.866412634224);
+    dp2.Set(0.404379849329, 0.0191152898235, 0.117988985704);
+  }
+  else if(j== 1 && i == 2)
+  {
+    dd = 0.7165631886362;
+    dp1.Set(0.167062414197, 0.581943658784, 0.704052592159);
+    dp2.Set(0.404383200422, 0.0191578029975, 0.117951821311);
+  }
+
+  double epsilon = 1e-12;
+  bool res= ((fabs(distance-dd) < epsilon)
+        && ((p1-dp1).optimizedNorm() < epsilon)
+        && ((p2-dp2).optimizedNorm() < epsilon));
+  return res;
+}
+
 /* Standard output of this example:
 
 Complex objects
