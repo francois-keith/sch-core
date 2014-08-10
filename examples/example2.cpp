@@ -177,9 +177,28 @@ bool verifyResult(unsigned i, unsigned j, double distance,
   }
 
   double epsilon = 1e-12;
-  bool res= ((fabs(distance-dd) < epsilon)
-        && ((p1-dp1).optimizedNorm() < epsilon)
-        && ((p2-dp2).optimizedNorm() < epsilon));
+  bool res = true;
+  if(fabs(distance-dd) >= epsilon)
+  {
+    std::cerr << "Error in distance:"<< std::endl;
+    std::cerr << distance << std::endl;
+    std::cerr << dd << std::endl;
+    res = false;
+  }
+  if ((p1-dp1).norm() >= epsilon)
+  {
+    std::cerr << "Error in p1:"<< std::endl;
+    std::cerr << p1 << std::endl;
+    std::cerr << dp1 << std::endl;
+    res = false;
+  }
+  if ((p2-dp2).norm() >= epsilon)
+  {
+    std::cerr << "Error in p2:"<< std::endl;
+    std::cerr << p2 << std::endl;
+    std::cerr << dp2 << std::endl;
+    res = false;
+  }
   return res;
 }
 
