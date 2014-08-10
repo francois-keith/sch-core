@@ -52,7 +52,7 @@ bool verifyResult(unsigned i, unsigned j, double distance,
   const Point3 & p1, const Point3 & p2);
 
 int
-main (int argc, char *argv[])
+main (int , char **)
 {
   //Scene (see example1.exe)
   CD_Scene sObj;
