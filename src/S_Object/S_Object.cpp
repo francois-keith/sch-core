@@ -28,11 +28,11 @@ void S_Object::setOrientation(const Matrix3x3& rotation)
 }
 
 
-void S_Object::setOrientation(const Quaternion quaternion)
-{
-  ++stamp_;
-  mRot_.Set(quaternion);
-}
+//void S_Object::setOrientation(const Quaternion quaternion)
+//{
+//  ++stamp_;
+//  quaternionToRotation(mRot_, quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
+//}
 
 
 void S_Object::setOrientation(const Scalar& q0,const Scalar& q1,const Scalar& q2,const Scalar& q3)
