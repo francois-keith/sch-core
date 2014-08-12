@@ -45,11 +45,23 @@
 //Include file for scene management
 #include <sch/CD/CD_Scene.h>
 
+//Inlude file for the verification of the result
+#include "example.hxx"
+
 using namespace sch;
 
-
+/*!
+ * \brief verifyResult checks if the distance computation is the same as the
+ *  one expected
+ * \param i, first object
+ * \param j, second object
+ * \param distance, the computed distance
+ * \param p1, the first witness point
+ * \param p2, the second witness point
+ * \return the result of the comparison
+ */
 bool verifyResult(unsigned i, unsigned j, double distance,
-  const Point3 & p1, const Point3 & p2);
+                  const Point3 & p1, const Point3 & p2);
 
 int
 main (int , char **)
@@ -140,18 +152,17 @@ main (int , char **)
       std::cout <<"  P1: "<< p1.transpose() << std::endl;
       std::cout <<"  P2: "<< p2.transpose() << std::endl;
       if(!verifyResult(i, j, distance, p1, p2))
-      {
-        std::cout << "Warning. The results are not the one expected." <<std::endl;
         comparison = false;
-      }
       std::cout << std::endl;
     }
   }
   return (comparison?0:1);
 }
 
+
+
 bool verifyResult(unsigned i, unsigned j, double distance,
-  const Point3 & p1, const Point3 & p2)
+                  const Point3 & p1, const Point3 & p2)
 {
   double dd(0);
   Point3 dp1(0, 0, 0);
@@ -176,29 +187,10 @@ bool verifyResult(unsigned i, unsigned j, double distance,
     dp2 << 0.404383200422, 0.0191578029975, 0.117951821311;
   }
 
-  double epsilon = 1e-12;
   bool res = true;
-  if(fabs(distance-dd) >= epsilon)
-  {
-    std::cerr << "Error in distance:"<< std::endl;
-    std::cerr << distance << std::endl;
-    std::cerr << dd << std::endl;
-    res = false;
-  }
-  if ((p1-dp1).norm() >= epsilon)
-  {
-    std::cerr << "Error in p1:"<< std::endl;
-    std::cerr << p1.transpose() << std::endl;
-    std::cerr << dp1.transpose() << std::endl;
-    res = false;
-  }
-  if ((p2-dp2).norm() >= epsilon)
-  {
-    std::cerr << "Error in p2:"<< std::endl;
-    std::cerr << p2.transpose() << std::endl;
-    std::cerr << dp2.transpose() << std::endl;
-    res = false;
-  }
+  res = compare(distance, dd, "Error in distance: ") && res;
+  res = compare(p1, dp1, "Error in p1: ") && res;
+  res = compare(p2, dp2, "Error in p2: ") && res;
   return res;
 }
 

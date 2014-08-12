@@ -154,7 +154,7 @@ main (int argc, char *argv[])
 
   }
 
-
+  return 0;
 }
 
 /*Standard output of this example:
